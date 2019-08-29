@@ -3,8 +3,7 @@
 	<persistence-unit name="projeto-spring-data-aula">
 		
 		<class>projeto.spring.data.aula.model.UsuarioSpringData</class>
-		<properties>
-			<property name="hibernate.hbm2ddl.auto" value="update"/>
-		</properties>
+		<class>projeto.spring.data.aula.model.Telefone</class>
+		
 	</persistence-unit>
 </persistence>

@@ -10,6 +10,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import projeto.spring.data.aula.dao.InterfaceSpringDataUser;
+import projeto.spring.data.aula.dao.InterfaceTelefone;
+import projeto.spring.data.aula.model.Telefone;
 import projeto.spring.data.aula.model.UsuarioSpringData;
 
 @RunWith(SpringJUnit4ClassRunner.class) // anotação para a integração do spring com junit
@@ -20,12 +22,15 @@ public class AppSpringDataTest {
 	@Autowired // anotação de injeção de dependencia, alternativa ao @inject
 	private InterfaceSpringDataUser interfaceSpringDataUser;
 
+	@Autowired
+	private InterfaceTelefone interfaceTelefone;
+	
 	@Test
 	public void testeInsert() {
 
 		UsuarioSpringData usuario = new UsuarioSpringData();
 		usuario.setEmail("teste@teste.com");
-		usuario.setNome("Eita");
+		usuario.setNome("Jose");
 		usuario.setIdade(20);
 		usuario.setLogin("teste123");
 		usuario.setSenha("senha123");
@@ -41,7 +46,7 @@ public class AppSpringDataTest {
 
 		// O find by id do spring retorna um objeto Optional do java util, por isso é
 		// necessário um obj desse tipo receber o retorno
-		Optional<UsuarioSpringData> usuario = interfaceSpringDataUser.findById(3L);
+		Optional<UsuarioSpringData> usuario = interfaceSpringDataUser.findById(4L);
 		// para a cessar os métodos do objeto do tipo UsuarioSpringData, usamos o método
 		// get() do optional que retorna o objeto do tipo, para dai ter acesso aos
 		// gettres do usuário
@@ -51,6 +56,15 @@ public class AppSpringDataTest {
 		System.out.println(usuario.get().getSenha());
 		System.out.println(usuario.get().getIdade());
 		System.out.println(usuario.get().getId());
+		
+		for (Telefone telefone : usuario.get().getTelefones()) {
+			System.out.println(telefone.getTipo());
+			System.out.println(telefone.getNumero());
+			System.out.println(telefone.getId());
+			System.out.println(telefone.getUsuario().getNome());
+			System.out.println("-----------------------------");
+		}
+		
 	}
 
 	@Test
@@ -129,6 +143,22 @@ public class AppSpringDataTest {
 	@Test
 	public void testeUpdateEmailPorNome() {
 		interfaceSpringDataUser.updateEmailPorNome("brunofwosiak@gmail.com", "Quarto Teste");
+	}
+
+	//Testes de telefone
+	@Test
+	public void testeInsertTelefone() {
+		
+		Optional<UsuarioSpringData> usuarioSpringData = interfaceSpringDataUser.findById(2L);
+		
+		UsuarioSpringData buscado = usuarioSpringData.get();
+		
+		Telefone telefone = new Telefone();
+		telefone.setTipo("celular");
+		telefone.setNumero("4196658974");
+		telefone.setUsuario(buscado);
+		
+		interfaceTelefone.save(telefone);
 	}
 	
 }
